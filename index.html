@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>OJT Daily Time Record – Smart Fill | Adaptive Print</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Playfair+Display:wght@600;700&display=swap');
+
+:root {
+  --accent: #1a3a5c;
+  --accent-light: #eef2f8;
+  --border: #dce3ec;
+  --text: #1f2a3e;
+  --gray: #5b6e8c;
+  --row-alt: #fafcff;
+  --bg: #f0f2f6;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  font-family: 'Inter', sans-serif;
+  color: var(--text);
+  line-height: 1.45;
+}
+
+/* settings bar – clean */
+.settings-bar {
+  background: var(--accent);
+  padding: 10px 20px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.brand {
+  font-family: 'Playfair Display', serif;
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  background: rgba(255,255,255,0.08);
+  padding: 5px 12px;
+  border-radius: 32px;
+}
+
+.s-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.05);
+  padding: 3px 14px;
+  border-radius: 32px;
+}
+
+.s-group label {
+  color: rgba(255,255,255,0.8);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.s-group input, .s-group select {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  padding: 5px 8px;
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 24px;
+  background: rgba(255,255,255,0.12);
+  color: white;
+  outline: none;
+  font-weight: 500;
+}
+
+.s-group select option { background: var(--accent); color: white; }
+.s-group input[type="color"] {
+  width: 32px;
+  height: 28px;
+  border-radius: 30px;
+  padding: 2px;
+  cursor: pointer;
+}
+
+.saved-indicator {
+  font-size: 11px;
+  color: #c8e6d9;
+  background: #2c6e3c;
+  padding: 4px 14px;
+  border-radius: 30px;
+  display: none;
+  font-weight: 500;
+}
+.saved-indicator.show { display: inline-block; }
+
+.btn {
+  padding: 6px 18px;
+  border: none;
+  border-radius: 32px;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-white { background: white; color: var(--accent); }
+.btn-white:hover { background: #eef2ff; transform: scale(0.96); }
+.btn-red { background: #c0392b; color: white; }
+.btn-red:hover { background: #a82315; }
+
+/* paper card */
+.paper-wrap {
+  padding: 28px 16px 48px;
+  display: flex;
+  justify-content: center;
+}
+.paper {
+  background: white;
+  width: 860px;
+  max-width: 100%;
+  border-radius: 24px;
+  box-shadow: 0 20px 35px -12px rgba(0,0,0,0.15);
+  padding: 32px 28px 40px;
+}
+.dtr-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+}
+.dtr-block {
+  display: flex;
+  flex-direction: column;
+}
+
+/* titles */
+.dtr-title { text-align: center; margin-bottom: 8px; }
+.dtr-title h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.dtr-title .ooo {
+  font-size: 8px;
+  color: #a0abb9;
+  letter-spacing: 0.25em;
+}
+
+.name-wrap { text-align: center; margin: 8px 0 2px; }
+.name-line {
+  border-bottom: 2px solid var(--accent);
+  display: inline-block;
+  padding-bottom: 2px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent);
+  min-width: 210px;
+}
+.name-label { font-size: 8px; color: #7c8ba0; text-align: center; letter-spacing: 0.1em; margin-bottom: 6px; }
+
+/* meta info */
+.dtr-meta {
+  background: #f8fafd;
+  padding: 8px 12px;
+  border-radius: 16px;
+  margin-bottom: 12px;
+  font-size: 8.5px;
+}
+.meta-month { display: flex; gap: 8px; margin-bottom: 6px; align-items: baseline; }
+.meta-month .ml { color: #4a5b7a; font-weight: 500; }
+.meta-month .mv { font-weight: 700; color: var(--accent); border-bottom: 1px dashed var(--border); flex: 1; }
+.meta-hours { font-size: 8px; color: #2c3e50; }
+.meta-hours p { font-weight: 600; background: var(--accent-light); display: inline-block; padding: 3px 14px; border-radius: 30px; }
+
+/* DTR table */
+.dtr-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 8.5px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+}
+.dtr-table th, .dtr-table td {
+  border: 1px solid var(--border);
+  text-align: center;
+  vertical-align: middle;
+  padding: 3px 2px;
+}
+.dtr-table thead tr:first-child th {
+  background: var(--accent);
+  color: white;
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 5px 2px;
+}
+.dtr-table thead tr:nth-child(2) th {
+  background: var(--accent-light);
+  color: #1f3a4b;
+  font-size: 7.5px;
+  font-weight: 700;
+}
+.dtr-table tbody tr:nth-child(even) { background: var(--row-alt); }
+.dtr-table tbody tr.sunday { background: #fff3f0 !important; }
+.dtr-table tbody tr.saturday { background: #fef9e6 !important; }
+.dtr-table tbody tr.empty { background: #f4f6fa; opacity: 0.6; }
+
+td.day-num {
+  width: 26px;
+  font-weight: 800;
+  font-size: 9px;
+  color: var(--accent);
+}
+td.time-cell { width: 56px; padding: 2px; }
+td.time-cell input[type="time"] {
+  width: 100%;
+  border: none;
+  background: transparent;
+  font-family: 'Inter', monospace;
+  font-size: 8px;
+  font-weight: 500;
+  text-align: center;
+  color: #1f2f3e;
+  outline: none;
+  cursor: pointer;
+  padding: 3px 0;
+  border-radius: 8px;
+  transition: 0.1s;
+}
+td.time-cell input[type="time"]:focus {
+  background: #e9edf4;
+  box-shadow: 0 0 0 2px rgba(26,58,92,0.15);
+}
+td.val-cell {
+  width: 32px;
+  font-size: 8.5px;
+  font-weight: 700;
+  color: #1f5e3a;
+}
+td.sun-label { font-size: 8px; color: #bc5a3c; font-weight: 600; letter-spacing: 0.2px; }
+
+.dtr-table tfoot td {
+  background: var(--accent);
+  color: white;
+  font-weight: 800;
+  font-size: 9px;
+  padding: 6px 4px;
+}
+.dtr-table tfoot .tlabel { text-align: right; padding-right: 10px; }
+.dtr-table tfoot .tval { font-size: 12px; font-weight: 800; }
+
+/* signatures */
+.cert {
+  margin-top: 12px;
+  font-size: 7.8px;
+  color: #4c5a72;
+  font-style: italic;
+  line-height: 1.45;
+  background: #fefef7;
+  padding: 6px 10px;
+  border-radius: 12px;
+}
+.verified { margin-top: 6px; font-size: 7.8px; color: #5a6a85; font-style: italic; }
+.sig {
+  border-top: 1.5px solid var(--accent);
+  margin-top: 18px;
+  padding-top: 6px;
+  text-align: center;
+  font-size: 9px;
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: 0.8px;
+}
+
+/* responsive for screen */
+@media (max-width: 780px) {
+  .dtr-columns { grid-template-columns: 1fr; gap: 32px; }
+  .paper { padding: 20px 16px; }
+  .settings-bar { gap: 8px; justify-content: center; }
+}
+
+/* PRINT OPTIMIZATION: matches display layout exactly */
+@media print {
+  @page {
+    size: auto;    /* respects paper size selected in print dialog (Letter, A4, Legal, etc.) */
+    margin: 0.4in 0.3in;
+  }
+  body {
+    background: white;
+    margin: 0;
+    padding: 0;
+  }
+  .settings-bar {
+    display: none !important;
+  }
+  .paper-wrap {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  .paper {
+    width: 100%;
+    max-width: 100%;
+    padding: 0.2in;
+    box-shadow: none;
+    border-radius: 0;
+    background: white;
+    margin: 0 auto;
+  }
+  
+  /* Keep the same two-column layout as display */
+  .dtr-columns {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 28px !important;
+  }
+  
+  .dtr-block {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  
+  /* Preserve table styling exactly as displayed */
+  .dtr-table {
+    font-size: 8.5px;
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .dtr-table th, .dtr-table td {
+    border: 1px solid var(--border) !important;
+    padding: 3px 2px !important;
+  }
+  
+  .dtr-table thead tr:first-child th {
+    background: var(--accent) !important;
+    color: white !important;
+    font-size: 8.5px !important;
+    font-weight: 700 !important;
+    padding: 5px 2px !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  
+  .dtr-table thead tr:nth-child(2) th {
+    background: var(--accent-light) !important;
+    color: #1f3a4b !important;
+    font-size: 7.5px !important;
+    font-weight: 700 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  
+  .dtr-table tbody tr:nth-child(even) { 
+    background: var(--row-alt) !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  
+  .dtr-table tbody tr.sunday { 
+    background: #fff3f0 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  
+  .dtr-table tbody tr.saturday { 
+    background: #fef9e6 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  
+  .dtr-table tbody tr.empty { 
+    background: #f4f6fa !important; 
+    opacity: 0.6 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  
+  .dtr-table tfoot td {
+    background: var(--accent) !important;
+    color: white !important;
+    font-weight: 800 !important;
+    font-size: 9px !important;
+    padding: 6px 4px !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  
+  /* Keep time inputs looking clean in print */
+  td.time-cell input[type="time"] {
+    font-size: 8px;
+    color: black;
+    background: transparent;
+    border: none;
+    padding: 3px 0;
+    -webkit-appearance: none;
+  }
+  
+  td.time-cell input[type="time"]::-webkit-calendar-picker-indicator {
+    display: none;
+  }
+  
+  td.time-cell input[type="time"]::-webkit-inner-spin-button,
+  td.time-cell input[type="time"]::-webkit-clear-button {
+    display: none;
+  }
+  
+  /* Preserve other elements */
+  .dtr-meta {
+    padding: 8px 12px;
+    margin-bottom: 12px;
+    background: #f8fafd;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  
+  .cert, .verified {
+    font-size: 7.8px;
+    margin-top: 12px;
+  }
+  
+  .sig {
+    margin-top: 18px;
+  }
+  
+  .dtr-table tfoot .tval {
+    font-size: 12px;
+  }
+  
+  /* Ensure colors print correctly */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="settings-bar">
+  <span class="brand">OJT DAILY TIME RECORD</span>
+  <div class="s-group"><label>Full name</label><input type="text" id="cfgName" value="" style="width:175px" oninput="updateNameAndSave(); scheduleSave()"></div>
+  <div class="s-group"><label>Month 1</label><select id="cfgMonth1" onchange="onMonthChange()"><option value="0">January</option><option value="1">February</option><option value="2">March</option><option value="3">April</option><option value="4" selected>May</option><option value="5">June</option><option value="6">July</option><option value="7">August</option><option value="8">September</option><option value="9">October</option><option value="10">November</option><option value="11">December</option></select></div>
+  <div class="s-group"><label>Month 2</label><select id="cfgMonth2" onchange="onMonthChange()"><option value="0">January</option><option value="1">February</option><option value="2">March</option><option value="3">April</option><option value="4">May</option><option value="5" selected>June</option><option value="6">July</option><option value="7">August</option><option value="8">September</option><option value="9">October</option><option value="10">November</option><option value="11">December</option></select></div>
+  <div class="s-group"><label>Year</label><input type="number" id="cfgYear" value="2026" min="2020" max="2040" style="width:68px" onchange="onYearChange()"></div>
+  <div class="s-group"><label>Theme</label><input type="color" id="cfgColor" value="#1a3a5c" oninput="applyColor(this.value); scheduleSave()"></div>
+  <span class="saved-indicator" id="savedIndicator">saved</span>
+  <button class="btn btn-white" onclick="window.print()">PRINT / PDF</button>
+  <button class="btn btn-red" onclick="clearAllRecords()">CLEAR ALL</button>
+</div>
+
+<div class="paper-wrap">
+  <div class="paper">
+    <div class="dtr-columns">
+      <div class="dtr-block" id="block1"></div>
+      <div class="dtr-block" id="block2"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ------------------------------------------------------------------
+//  UNIFIED HOURS: Monday to Saturday 8:00 AM – 5:00 PM
+//  PERSISTENCE: each (year, month, block) stores own times separately
+//  Print: adaptable to any paper size, no forced landscape
+//  Sunday: no extra text, just "Sunday"
+//  Column header: "Total" instead of "Undertime / Total"
+// ------------------------------------------------------------------
+const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const LS_GLOBAL = "ojt_dtr_v5_permonth";
+
+let saveTimer = null;
+function scheduleSave() { clearTimeout(saveTimer); saveTimer = setTimeout(() => saveToStorage(), 400); }
+
+function getStorageKey(bid, year, month) {
+  return `${bid}_${year}_${month}`;
+}
+
+let allTimesCache = {};
+let currentYear = 2026;
+let currentMonth1 = 4;
+let currentMonth2 = 5;
+
+function getDayInfo(bid, dayNum) {
+  const year = parseInt(document.getElementById('cfgYear').value);
+  const monthSel = bid === 'block1' ? 'cfgMonth1' : 'cfgMonth2';
+  const month = parseInt(document.getElementById(monthSel).value);
+  const date = new Date(year, month, dayNum);
+  const dow = date.getDay();
+  return { year, month, isSunday: dow === 0, isSaturday: dow === 6, date };
+}
+
+function toMinutes(timeStr) {
+  if (!timeStr) return null;
+  const [h, m] = timeStr.split(':').map(Number);
+  return (isNaN(h) || isNaN(m)) ? null : h * 60 + m;
+}
+
+function recalcRow(bid, dayNum) {
+  const ai = document.getElementById(`${bid}_ai_${dayNum}`)?.value;
+  const ao = document.getElementById(`${bid}_ao_${dayNum}`)?.value;
+  const pi = document.getElementById(`${bid}_pi_${dayNum}`)?.value;
+  const po = document.getElementById(`${bid}_po_${dayNum}`)?.value;
+  const hoursSpan = document.getElementById(`${bid}_h_${dayNum}`);
+  const minsSpan = document.getElementById(`${bid}_m_${dayNum}`);
+  if (!hoursSpan || !minsSpan) return;
+
+  let totalMins = 0;
+  if (ai && ao) {
+    const start = toMinutes(ai);
+    const end = toMinutes(ao);
+    if (start !== null && end !== null && end > start) totalMins += (end - start);
+  }
+  if (pi && po) {
+    const start = toMinutes(pi);
+    const end = toMinutes(po);
+    if (start !== null && end !== null && end > start) totalMins += (end - start);
+  }
+  if (ai && po && (!ao || !pi)) {
+    const start = toMinutes(ai);
+    const end = toMinutes(po);
+    if (start !== null && end !== null && end > start) totalMins = end - start;
+  }
+
+  const hrs = Math.floor(totalMins / 60);
+  const mins = totalMins % 60;
+  hoursSpan.textContent = totalMins > 0 ? hrs : '';
+  minsSpan.textContent = totalMins > 0 ? String(mins).padStart(2, '0') : '';
+  return totalMins;
+}
+
+function updateBlockTotals(bid, maxDays) {
+  let total = 0;
+  for (let d = 1; d <= maxDays; d++) {
+    const h = parseInt(document.getElementById(`${bid}_h_${d}`)?.textContent) || 0;
+    const m = parseInt(document.getElementById(`${bid}_m_${d}`)?.textContent) || 0;
+    total += (h * 60 + m);
+  }
+  const totH = document.getElementById(`${bid}_th`);
+  const totM = document.getElementById(`${bid}_tm`);
+  if (totH) totH.textContent = Math.floor(total / 60);
+  if (totM) totM.textContent = String(total % 60).padStart(2, '0');
+}
+
+function onTimeEdited(bid, day) {
+  recalcRow(bid, day);
+  const year = parseInt(document.getElementById('cfgYear').value);
+  const monthSel = bid === 'block1' ? 'cfgMonth1' : 'cfgMonth2';
+  const month = parseInt(document.getElementById(monthSel).value);
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  updateBlockTotals(bid, daysInMonth);
+  saveCurrentBlockTimesToCache(bid, year, month);
+  scheduleSave();
+}
+
+function saveCurrentBlockTimesToCache(bid, year, month) {
+  const key = getStorageKey(bid, year, month);
+  const dim = new Date(year, month + 1, 0).getDate();
+  const times = {};
+  for (let d = 1; d <= dim; d++) {
+    const dt = new Date(year, month, d);
+    if (dt.getDay() === 0) continue;
+    ['ai','ao','pi','po'].forEach(k => {
+      const el = document.getElementById(`${bid}_${k}_${d}`);
+      if (el) times[`${k}_${d}`] = el.value;
+    });
+  }
+  allTimesCache[key] = times;
+}
+
+function restoreBlockTimes(bid, year, month) {
+  const key = getStorageKey(bid, year, month);
+  const savedTimes = allTimesCache[key];
+  if (!savedTimes) return;
+  const dim = new Date(year, month + 1, 0).getDate();
+  for (let d = 1; d <= dim; d++) {
+    const dt = new Date(year, month, d);
+    if (dt.getDay() === 0) continue;
+    for (let k of ['ai','ao','pi','po']) {
+      const keyField = `${k}_${d}`;
+      const val = savedTimes[keyField];
+      const field = document.getElementById(`${bid}_${k}_${d}`);
+      if (field && val !== undefined) field.value = val || '';
+    }
+  }
+  for (let d = 1; d <= dim; d++) {
+    if (new Date(year, month, d).getDay() !== 0) recalcRow(bid, d);
+  }
+  updateBlockTotals(bid, dim);
+}
+
+function handleSmartFill(e) {
+  const input = e.target;
+  if (!input || input.tagName !== 'INPUT' || input.type !== 'time') return;
+  const id = input.id;
+  if (!id) return;
+  const parts = id.split('_');
+  if (parts.length !== 3) return;
+  const bid = parts[0];
+  const fieldType = parts[1];
+  const dayNum = parseInt(parts[2]);
+  if (isNaN(dayNum)) return;
+  if (fieldType !== 'ai' && fieldType !== 'po') return;
+  if (input.value && input.value.trim() !== "") return;
+  const { isSunday } = getDayInfo(bid, dayNum);
+  if (isSunday) return;
+  let defaultValue = null;
+  if (fieldType === 'ai') defaultValue = "08:00";
+  else if (fieldType === 'po') defaultValue = "17:00";
+  if (defaultValue) {
+    input.value = defaultValue;
+    const changeEv = new Event('input', { bubbles: true });
+    input.dispatchEvent(changeEv);
+  }
+}
+
+function buildBlock(bid, monthIdx, year, employeeName) {
+  const daysInMonth = new Date(year, monthIdx + 1, 0).getDate();
+  let tbodyRows = '';
+  for (let d = 1; d <= 31; d++) {
+    const isReal = (d <= daysInMonth);
+    if (!isReal) {
+      tbodyRows += `<tr class="empty"><td class="day-num">${d}</td><td class="time-cell"></td><td class="time-cell"></td><td class="time-cell"></td><td class="time-cell"></td><td class="val-cell"></td><td class="val-cell"><\/td></tr>`;
+      continue;
+    }
+    const dt = new Date(year, monthIdx, d);
+    const dayOfWeek = dt.getDay();
+    const isSun = (dayOfWeek === 0);
+    const isSat = (dayOfWeek === 6);
+    if (isSun) {
+      tbodyRows += `<tr class="sunday"><td class="day-num">${d}</td><td colspan="4" class="sun-label">Sunday<\/td><td class="val-cell"><\/td><td class="val-cell"><\/td></tr>`;
+      continue;
+    }
+    const rowClass = isSat ? 'saturday' : '';
+    tbodyRows += `<tr class="${rowClass}">
+      <td class="day-num">${d}</td>
+      <td class="time-cell"><input type="time" id="${bid}_ai_${d}" autocomplete="off"><\/td>
+      <td class="time-cell"><input type="time" id="${bid}_ao_${d}" autocomplete="off"><\/td>
+      <td class="time-cell"><input type="time" id="${bid}_pi_${d}" autocomplete="off"><\/td>
+      <td class="time-cell"><input type="time" id="${bid}_po_${d}" autocomplete="off"><\/td>
+      <td class="val-cell" id="${bid}_h_${d}"><\/td>
+      <td class="val-cell" id="${bid}_m_${d}"><\/td>
+    </tr>`;
+  }
+  const monthName = MONTHS[monthIdx];
+  const unifiedText = `Official hours (Monday to Saturday): 8:00 AM – 5:00 PM`;
+  const fullHTML = `
+    <div class="dtr-title">
+      <h2>DAILY TIME RECORD</h2>
+      <div class="ooo">••• o0o •••</div>
+    </div>
+    <div class="name-wrap"><span class="name-line emp-name">${escapeHtml(employeeName)}</span></div>
+    <div class="name-label">(trainee / employee)</div>
+    <div class="dtr-meta">
+      <div class="meta-month"><span class="ml">For the month of</span><span class="mv"> ${monthName} ${year}</span></div>
+      <div class="meta-hours"><p>${unifiedText}</p></div>
+    </div>
+    <table class="dtr-table">
+      <thead>
+        <tr><th rowspan="2">Day</th><th colspan="2">A.M.</th><th colspan="2">P.M.</th><th colspan="2">Total<\/th></tr>
+        <tr><th>Arrival</th><th>Departure</th><th>Arrival</th><th>Departure</th><th>Hours</th><th>Mins</th></tr>
+      </thead>
+      <tbody>${tbodyRows}</tbody>
+      <tfoot><tr><td colspan="5" class="tlabel">TOTAL HOURS (Month)<\/td><td class="tval" id="${bid}_th">0<\/td><td class="tval" id="${bid}_tm">00<\/td></tr></tfoot>
+    </table>
+    <div class="cert">I certify that this log reflects actual attendance; times were recorded daily upon arrival and departure.</div>
+    <div class="verified">Verified as per prescribed office hours (8:00 AM – 5:00 PM).</div>
+    <div class="sig">SUPERVISOR / IN-CHARGE</div>
+  `;
+  document.getElementById(bid).innerHTML = fullHTML;
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dtCheck = new Date(year, monthIdx, d);
+    if (dtCheck.getDay() === 0) continue;
+    ['ai','ao','pi','po'].forEach(code => {
+      const field = document.getElementById(`${bid}_${code}_${d}`);
+      if (field) {
+        field.removeEventListener('input', () => onTimeEdited(bid, d));
+        field.addEventListener('input', () => onTimeEdited(bid, d));
+      }
+    });
+  }
+  restoreBlockTimes(bid, year, monthIdx);
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return str.replace(/[&<>]/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m] || m));
+}
+
+function buildAll() {
+  const year = parseInt(document.getElementById('cfgYear').value);
+  const month1 = parseInt(document.getElementById('cfgMonth1').value);
+  const month2 = parseInt(document.getElementById('cfgMonth2').value);
+  const name = document.getElementById('cfgName').value.trim() || 'OJT Trainee';
+  buildBlock('block1', month1, year, name);
+  buildBlock('block2', month2, year, name);
+}
+
+function updateNameAndSave() {
+  const newName = document.getElementById('cfgName').value.trim() || 'OJT Trainee';
+  document.querySelectorAll('.emp-name').forEach(el => el.textContent = newName);
+  scheduleSave();
+}
+
+function applyColor(hex) {
+  document.documentElement.style.setProperty('--accent', hex);
+  document.documentElement.style.setProperty('--accent-light', hex + '15');
+}
+
+function saveToStorage() {
+  const globalConfig = {
+    name: document.getElementById('cfgName').value,
+    color: document.getElementById('cfgColor').value,
+    year: parseInt(document.getElementById('cfgYear').value),
+    month1: parseInt(document.getElementById('cfgMonth1').value),
+    month2: parseInt(document.getElementById('cfgMonth2').value),
+    allTimes: allTimesCache
+  };
+  localStorage.setItem(LS_GLOBAL, JSON.stringify(globalConfig));
+  const ind = document.getElementById('savedIndicator');
+  ind.classList.add('show');
+  setTimeout(() => ind.classList.remove('show'), 1300);
+}
+
+function loadFromStorage() {
+  const raw = localStorage.getItem(LS_GLOBAL);
+  if (!raw) return false;
+  try {
+    const data = JSON.parse(raw);
+    if (data.name) document.getElementById('cfgName').value = data.name;
+    if (data.color) { document.getElementById('cfgColor').value = data.color; applyColor(data.color); }
+    if (data.year) document.getElementById('cfgYear').value = data.year;
+    if (data.month1 !== undefined) document.getElementById('cfgMonth1').value = data.month1;
+    if (data.month2 !== undefined) document.getElementById('cfgMonth2').value = data.month2;
+    if (data.allTimes) allTimesCache = data.allTimes;
+    return true;
+  } catch(e) { return false; }
+}
+
+function onMonthChange() {
+  const year = parseInt(document.getElementById('cfgYear').value);
+  const m1 = parseInt(document.getElementById('cfgMonth1').value);
+  const m2 = parseInt(document.getElementById('cfgMonth2').value);
+  if (document.getElementById('block1')?.innerHTML) {
+    saveCurrentBlockTimesToCache('block1', year, currentMonth1);
+    saveCurrentBlockTimesToCache('block2', year, currentMonth2);
+  }
+  currentMonth1 = m1;
+  currentMonth2 = m2;
+  buildAll();
+  scheduleSave();
+}
+
+function onYearChange() {
+  const year = parseInt(document.getElementById('cfgYear').value);
+  if (document.getElementById('block1')?.innerHTML) {
+    saveCurrentBlockTimesToCache('block1', currentYear, currentMonth1);
+    saveCurrentBlockTimesToCache('block2', currentYear, currentMonth2);
+  }
+  currentYear = year;
+  buildAll();
+  scheduleSave();
+}
+
+function clearAllRecords() {
+  if (!confirm('Clear all entered times for all months? This will reset all saved data.')) return;
+  allTimesCache = {};
+  buildAll();
+  scheduleSave();
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  loadFromStorage();
+  currentYear = parseInt(document.getElementById('cfgYear').value);
+  currentMonth1 = parseInt(document.getElementById('cfgMonth1').value);
+  currentMonth2 = parseInt(document.getElementById('cfgMonth2').value);
+  buildAll();
+  document.body.addEventListener('focus', handleSmartFill, true);
+  updateNameAndSave();
+});
+</script>
+</body>
+</html>
