@@ -276,4 +276,19 @@ window.addEventListener('DOMContentLoaded', () => {
   buildAll();
   document.body.addEventListener('focus', handleSmartFill, true);
   updateNameAndSave();
+
+  // ---------- Night Mode Toggle ----------
+  const toggleBtn = document.getElementById('nightModeToggle');
+  if (toggleBtn) {
+    if (localStorage.getItem('nightMode') === 'true') {
+      document.body.classList.add('night-mode');
+      toggleBtn.textContent = '☀️ Light Mode';
+    }
+    toggleBtn.addEventListener('click', () => {
+      document.body.classList.toggle('night-mode');
+      const isNight = document.body.classList.contains('night-mode');
+      localStorage.setItem('nightMode', isNight);
+      toggleBtn.textContent = isNight ? '☀️ Light Mode' : '🌙 Night Mode';
+    });
+  }
 });
