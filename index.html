@@ -30,95 +30,147 @@ body {
   line-height: 1.45;
 }
 
-/* settings bar – clean */
+/* settings bar – modern glassmorphism */
 .settings-bar {
-  background: var(--accent);
-  padding: 10px 20px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 12px 24px;
   display: flex;
-  gap: 12px;
+  gap: 16px;
   align-items: center;
   flex-wrap: wrap;
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.03);
 }
 
 .brand {
-  font-family: 'Playfair Display', serif;
-  color: white;
+  font-family: 'Inter', sans-serif;
+  color: #1a1a2e;
   font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.02em;
-  background: rgba(255,255,255,0.08);
-  padding: 5px 12px;
-  border-radius: 32px;
+  letter-spacing: -0.01em;
+  background: linear-gradient(135deg, #f0f4ff 0%, #e8ecf4 100%);
+  padding: 8px 16px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
+}
+
+.brand::before {
+  content: "⏱";
+  font-size: 16px;
 }
 
 .s-group {
   display: flex;
   align-items: center;
-  gap: 6px;
-  background: rgba(255,255,255,0.05);
-  padding: 3px 14px;
-  border-radius: 32px;
+  gap: 8px;
+  background: white;
+  padding: 6px 16px;
+  border-radius: 12px;
+  border: 1px solid #e8ecf1;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  transition: all 0.2s ease;
+}
+
+.s-group:hover {
+  border-color: #d0d5e0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
 }
 
 .s-group label {
-  color: rgba(255,255,255,0.8);
+  color: #6b7280;
   font-size: 10px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
 }
 
 .s-group input, .s-group select {
   font-family: 'Inter', sans-serif;
-  font-size: 12px;
-  padding: 5px 8px;
-  border: 1px solid rgba(255,255,255,0.3);
-  border-radius: 24px;
-  background: rgba(255,255,255,0.12);
-  color: white;
+  font-size: 13px;
+  padding: 6px 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #fafbfc;
+  color: #1f2937;
   outline: none;
   font-weight: 500;
+  transition: all 0.15s ease;
 }
 
-.s-group select option { background: var(--accent); color: white; }
+.s-group input:focus, .s-group select:focus {
+  border-color: var(--accent);
+  background: white;
+  box-shadow: 0 0 0 3px rgba(26, 58, 92, 0.08);
+}
+
+.s-group select option { 
+  background: white; 
+  color: #1f2937; 
+}
+
 .s-group input[type="color"] {
-  width: 32px;
-  height: 28px;
-  border-radius: 30px;
+  width: 36px;
+  height: 32px;
+  border-radius: 8px;
   padding: 2px;
   cursor: pointer;
+  border: 2px solid #e5e7eb;
 }
 
 .saved-indicator {
   font-size: 11px;
-  color: #c8e6d9;
-  background: #2c6e3c;
-  padding: 4px 14px;
-  border-radius: 30px;
+  color: #059669;
+  background: #ecfdf5;
+  padding: 6px 16px;
+  border-radius: 12px;
   display: none;
-  font-weight: 500;
+  font-weight: 600;
+  border: 1px solid #a7f3d0;
 }
 .saved-indicator.show { display: inline-block; }
 
 .btn {
-  padding: 6px 18px;
+  padding: 8px 20px;
   border: none;
-  border-radius: 32px;
+  border-radius: 12px;
   font-family: 'Inter', sans-serif;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
 }
-.btn-white { background: white; color: var(--accent); }
-.btn-white:hover { background: #eef2ff; transform: scale(0.96); }
-.btn-red { background: #c0392b; color: white; }
-.btn-red:hover { background: #a82315; }
 
+.btn-white { 
+  background: #1f2937; 
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-white:hover { 
+  background: #111827; 
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-red { 
+  background: white;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.btn-red:hover { 
+  background: #fef2f2;
+  border-color: #fca5a5;
+}
+  
 /* paper card */
 .paper-wrap {
   padding: 28px 16px 48px;
@@ -450,14 +502,39 @@ td.sun-label { font-size: 8px; color: #bc5a3c; font-weight: 600; letter-spacing:
 
 <div class="settings-bar">
   <span class="brand">OJT DAILY TIME RECORD</span>
-  <div class="s-group"><label>Full name</label><input type="text" id="cfgName" value="" style="width:175px" oninput="updateNameAndSave(); scheduleSave()"></div>
-  <div class="s-group"><label>Month 1</label><select id="cfgMonth1" onchange="onMonthChange()"><option value="0">January</option><option value="1">February</option><option value="2">March</option><option value="3">April</option><option value="4" selected>May</option><option value="5">June</option><option value="6">July</option><option value="7">August</option><option value="8">September</option><option value="9">October</option><option value="10">November</option><option value="11">December</option></select></div>
-  <div class="s-group"><label>Month 2</label><select id="cfgMonth2" onchange="onMonthChange()"><option value="0">January</option><option value="1">February</option><option value="2">March</option><option value="3">April</option><option value="4">May</option><option value="5" selected>June</option><option value="6">July</option><option value="7">August</option><option value="8">September</option><option value="9">October</option><option value="10">November</option><option value="11">December</option></select></div>
-  <div class="s-group"><label>Year</label><input type="number" id="cfgYear" value="2026" min="2020" max="2040" style="width:68px" onchange="onYearChange()"></div>
-  <div class="s-group"><label>Theme</label><input type="color" id="cfgColor" value="#1a3a5c" oninput="applyColor(this.value); scheduleSave()"></div>
-  <span class="saved-indicator" id="savedIndicator">saved</span>
-  <button class="btn btn-white" onclick="window.print()">PRINT / PDF</button>
-  <button class="btn btn-red" onclick="clearAllRecords()">CLEAR ALL</button>
+  <div class="s-group">
+    <label>Name</label>
+    <input type="text" id="cfgName" value="Bunag, Alyssa Marie S." style="width:175px" oninput="updateNameAndSave(); scheduleSave()">
+  </div>
+  <div class="s-group">
+    <label>Month 1</label>
+    <select id="cfgMonth1" onchange="onMonthChange()">
+      <option value="0">Jan</option><option value="1">Feb</option><option value="2">Mar</option>
+      <option value="3">Apr</option><option value="4" selected>May</option><option value="5">Jun</option>
+      <option value="6">Jul</option><option value="7">Aug</option><option value="8">Sep</option>
+      <option value="9">Oct</option><option value="10">Nov</option><option value="11">Dec</option>
+    </select>
+  </div>
+  <div class="s-group">
+    <label>Month 2</label>
+    <select id="cfgMonth2" onchange="onMonthChange()">
+      <option value="0">Jan</option><option value="1">Feb</option><option value="2">Mar</option>
+      <option value="3">Apr</option><option value="4">May</option><option value="5" selected>Jun</option>
+      <option value="6">Jul</option><option value="7">Aug</option><option value="8">Sep</option>
+      <option value="9">Oct</option><option value="10">Nov</option><option value="11">Dec</option>
+    </select>
+  </div>
+  <div class="s-group">
+    <label>Year</label>
+    <input type="number" id="cfgYear" value="2026" min="2020" max="2040" style="width:72px" onchange="onYearChange()">
+  </div>
+  <div class="s-group">
+    <label>Theme</label>
+    <input type="color" id="cfgColor" value="#1a3a5c" oninput="applyColor(this.value); scheduleSave()">
+  </div>
+  <span class="saved-indicator" id="savedIndicator">✓ Saved</span>
+  <button class="btn btn-white" onclick="window.print()">📄 Print PDF</button>
+  <button class="btn btn-red" onclick="clearAllRecords()">Clear All</button>
 </div>
 
 <div class="paper-wrap">
