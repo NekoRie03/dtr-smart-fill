@@ -164,7 +164,8 @@ function buildBlock(bid, monthIdx, year, employeeName) {
       <tbody>${tbodyRows}<\/tbody>
       <tfoot><tr><td colspan="5" class="tlabel">TOTAL HOURS (Month)<\/td><td class="tval" id="${bid}_th">0<\/td><td class="tval" id="${bid}_tm">00<\/td><\/tr><\/tfoot>
     <\/table>
-    <div class="cert">I certify that this log reflects actual attendance; times were recorded daily upon arrival and departure.</div>
+    <div class="cert">I certify on my honor that the above is a true and correct report of the hours of work performed, record of which was made daily at the time of arrival and departure from office.
+</div>
     <div class="verified">Verified as per prescribed office hours (8:00 AM – 5:00 PM).</div>
     <div class="sig">SUPERVISOR / IN-CHARGE</div>
   `;
@@ -191,13 +192,13 @@ function buildAll() {
   const year = parseInt(document.getElementById('cfgYear').value);
   const m1 = parseInt(document.getElementById('cfgMonth1').value);
   const m2 = parseInt(document.getElementById('cfgMonth2').value);
-  const name = document.getElementById('cfgName').value.trim() || 'OJT Trainee';
+  const name = document.getElementById('cfgName').value.trim() || '';
   buildBlock('block1', m1, year, name);
   buildBlock('block2', m2, year, name);
 }
 
 function updateNameAndSave() {
-  const newName = document.getElementById('cfgName').value.trim() || 'OJT Trainee';
+  const newName = document.getElementById('cfgName').value.trim() || '';
   document.querySelectorAll('.emp-name').forEach(el => el.textContent = newName);
   scheduleSave();
 }
