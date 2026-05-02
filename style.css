@@ -308,3 +308,87 @@ td.sun-label { font-size: 8px; color: #bc5a3c; font-weight: 600; }
   td.time-cell input[type="time"]::-webkit-calendar-picker-indicator { display: none; }
   * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 }
+
+/* ---------- Night Mode Styles ---------- */
+body.night-mode {
+  background: #121212;
+  --bg: #121212;
+  --border: #2c2c2c;
+  --text: #e0e0e0;
+  --gray: #a0a0a0;
+  --row-alt: #1e1e1e;
+}
+
+body.night-mode .settings-bar {
+  background: #1e1e1e;
+  border-bottom-color: #333;
+}
+
+body.night-mode .brand,
+body.night-mode .s-group label {
+  color: #ccc;
+}
+
+body.night-mode .s-group input,
+body.night-mode .s-group select {
+  background: #2a2a2a;
+  border-color: #444;
+  color: #eee;
+}
+
+body.night-mode .paper {
+  background: #1a1a1a;
+  box-shadow: none;
+}
+
+body.night-mode .dtr-meta,
+body.night-mode .cert,
+body.night-mode .verified {
+  background: #252525;
+  color: #ccc;
+}
+
+body.night-mode .dtr-table th,
+body.night-mode .dtr-table td {
+  border-color: #333;
+}
+
+body.night-mode .dtr-table tbody tr:nth-child(even) {
+  background: #242424;
+}
+
+body.night-mode .dtr-table tbody tr.sunday {
+  background: #2a1e1c !important;
+}
+
+body.night-mode .dtr-table tbody tr.saturday {
+  background: #26261c !important;
+}
+
+body.night-mode .dtr-table tbody tr.empty {
+  background: #1f1f1f;
+  opacity: 0.5;
+}
+
+body.night-mode td.time-cell input[type="time"] {
+  color: #ddd;
+}
+
+body.night-mode td.time-cell input[type="time"]:focus {
+  background: #333;
+}
+
+body.night-mode .btn {
+  background: #2c2c2c;
+  border-color: #555;
+  color: #ddd;
+}
+
+body.night-mode .btn-red {
+  border-color: #7a4a3e;
+  color: #e08d7a;
+}
+
+body.night-mode .btn-red:hover {
+  background: #3a2a27;
+}
