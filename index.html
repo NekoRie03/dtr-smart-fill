@@ -3,30 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>DTR · SMART FILL</title>
+  <title>OJT Daily Time Record – Smart Fill DTR</title>
+  <!-- Clean, print-friendly DTR with smart fill and per-month persistence -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="settings-bar">
-  <span class="brand"> DTR · SMART FILL </span>
-  <div class="s-group"><label>name</label><input type="text" id="cfgName" value="" placeholder="" style="width:170px" oninput="updateNameAndSave(); scheduleSave()"></div>
-  <div class="s-group"><label>month 1</label><select id="cfgMonth1" onchange="onMonthChange()">
+  <span class="brand">⟡ DTR · SMART FILL ⟡</span>
+  <div class="s-group"><label>name</label><input type="text" id="cfgName" value="" placeholder="type here" style="width:170px"></div>
+  <div class="s-group"><label>month 1</label><select id="cfgMonth1">
       <option value="0">January</option><option value="1">February</option><option value="2">March</option><option value="3">April</option><option value="4" selected>May</option>
       <option value="5">June</option><option value="6">July</option><option value="7">August</option><option value="8">September</option><option value="9">October</option>
       <option value="10">November</option><option value="11">December</option>
     </select></div>
-  <div class="s-group"><label>month 2</label><select id="cfgMonth2" onchange="onMonthChange()">
+  <div class="s-group"><label>month 2</label><select id="cfgMonth2">
       <option value="0">January</option><option value="1">February</option><option value="2">March</option><option value="3">April</option><option value="4">May</option>
       <option value="5" selected>June</option><option value="6">July</option><option value="7">August</option><option value="8">September</option><option value="9">October</option>
       <option value="10">November</option><option value="11">December</option>
     </select></div>
-  <div class="s-group"><label>year</label><input type="number" id="cfgYear" value="2026" min="2020" max="2040" style="width:78px" onchange="onYearChange()"></div>
-  <div class="s-group"><label>theme</label><input type="color" id="cfgColor" value="#1a3a5c" oninput="applyColor(this.value); scheduleSave()"></div>
+  <div class="s-group"><label>year</label><input type="number" id="cfgYear" value="2026" min="2020" max="2040" style="width:78px"></div>
+  <div class="s-group"><label>theme</label><input type="color" id="cfgColor" value="#1a3a5c"></div>
   <span class="saved-indicator" id="savedIndicator">saved</span>
-  <button class="btn" onclick="window.print()">🖶 PRINT / PDF</button>
-  <button class="btn btn-red" onclick="clearAllRecords()">✕ CLEAR ALL</button>
-  
+  <button class="btn" id="printBtn">🖶 PRINT / PDF</button>
+  <button class="btn btn-red" id="clearAllBtn">✕ CLEAR ALL</button>
 </div>
 
 <div class="paper-wrap">

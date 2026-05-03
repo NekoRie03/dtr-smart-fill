@@ -23,7 +23,7 @@ body {
   line-height: 1.45;
 }
 
-/* ---------- ZenPen inspired nav bar ---------- */
+/* ----- top bar (zenpen style) ----- */
 .settings-bar {
   background: #ffffff;
   padding: 12px 28px;
@@ -122,7 +122,7 @@ body {
   border-color: #e2b3ab;
 }
 
-/* ---------- paper card & DTR tables ---------- */
+/* ----- paper and DTR grid ----- */
 .paper-wrap {
   padding: 28px 16px 48px;
   display: flex;
@@ -260,11 +260,10 @@ td.sun-label { font-size: 8px; color: #bc5a3c; font-weight: 600; }
   background: #fefef7;
   padding: 6px 10px;
   border-radius: 12px;
-  margin-top: 12px;
 }
 .sig {
   border-top: 1.5px solid var(--accent);
-  margin-top: 18px;
+  margin-top: 60px;
   padding-top: 6px;
   text-align: center;
   font-size: 9px;
@@ -273,7 +272,6 @@ td.sun-label { font-size: 8px; color: #bc5a3c; font-weight: 600; }
   letter-spacing: 0.8px;
 }
 
-/* mobile + zoom line break between DTRs */
 @media (max-width: 780px) {
   .dtr-columns {
     grid-template-columns: 1fr;
@@ -291,7 +289,6 @@ td.sun-label { font-size: 8px; color: #bc5a3c; font-weight: 600; }
   }
 }
 
-/* Print styles (unchanged, keeps two columns and exact colors) */
 @media print {
   @page { size: auto; margin: 0.4in 0.3in; }
   body { background: white; margin: 0; padding: 0; }
